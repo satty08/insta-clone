@@ -1,34 +1,141 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import Post from './Post.js'
+import Post from './Post.js';
+import { db, auth } from './firebase';
+import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+import { Button, Input } from '@material-ui/core';
+
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
 function App() {
+  const classes = useStyles();
+  const [modalStyle] = useState(getModalStyle);
 
-  const [posts, setPosts] = useState([
-    {username:"Satty",
-     caption:"no caption",
-     imageUrl:"https://instagram.fdel11-1.fna.fbcdn.net/v/t51.2885-19/s320x320/71186285_3021376311224610_5164292243195953152_n.jpg?_nc_ht=instagram.fdel11-1.fna.fbcdn.net&_nc_ohc=9G_1-bh8emgAX_Lwsak&oh=434fec58c62a99a12b906b86e1483fca&oe=5F684C69"
-    },
-    {username:"Tarun", 
-    caption:"Setttttttt",
-    imageUrl:"https://image.cnbcfm.com/api/v1/image/105992231-1561667465295gettyimages-521697453.jpeg?v=1561667497&w=1600&h=900"
+  const [posts, setPosts] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        //User has logged in
+        console.log(authUser);
+        setUser(authUser);
+
+      }else{
+        //user has logged out
+        setUser(null)
+      }
+    })
+
+    return () => {
+      //perform some cleanup actions
+      unsubscribe();
     }
-  ]);
+  }, [user, username]);
+
+  //useEffect -> Runs a piece of code based on a specific condition
+
+  useEffect(() => {
+    //this is where the code runs
+    db.collection('posts').onSnapshot(snapshot => {
+      //everytime a new post is added, this code fires....
+      setPosts(snapshot.docs.map(doc => ({
+        id: doc.id,
+        post: doc.data()
+      })));
+    })
+  }, []);
+
+  const signUp = (event) => {
+    event.preventDefault();
+
+    auth.createUserWithEmailAndPassword(email, password)
+    .then((authUser) => {
+      return authUser.user.updateProfile({
+        displayName: username
+      })
+    })
+    .catch((error) => alert(error.message))
+  }
 
   return (
     <div className="App">
 
-    {/* Header */}
+    <Modal
+      open={open}
+      onClose={() => setOpen(false)}
+    >
+    <div style={modalStyle} className={classes.paper}>
+    <form className="app__signup">  
+      <center>
+      <img
+        className="app_headerImage" 
+        src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+        alt="" />
+      </center>
+
+      <Input
+        placeholder="Username"
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <Input
+        placeholder="Email"
+        type="text"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        placeholder="Password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <Button onClick={signUp}>Sign Up</Button>
+    </form>  
+    </div>
+    </Modal>
+
     <div className="app__header">
       <img
         className="app_headerImage" 
         src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
         alt="" />
     </div>
+
+    <Button type="submit" onClick={() => setOpen(true)} >Sign Up</Button>
+
     <h1>New Post</h1>
     {
-      posts.map(post => (
-        <Post username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+      posts.map(({id, post}) => (
+        <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
       ))
     }
       
