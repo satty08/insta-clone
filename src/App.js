@@ -22,7 +22,7 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    width: 400,
+    width: 250,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -102,6 +102,7 @@ function App() {
     <Modal
       open={open}
       onClose={() => setOpen(false)}
+      className="modal"
     >
     <div style={modalStyle} className={classes.paper}>
     <form className="app__signup">  

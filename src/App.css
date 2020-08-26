@@ -24,9 +24,20 @@
   justify-content: center;
 }
 
+@media only screen and (max-width: 600px) {
+  .app__posts{
+    display: inline;
+    justify-content: center;
+  }
+
+  .modal{
+    object-fit: scale-down;
+  }
+}
+
 .app__postsRight{
   margin-left: 20px;
-}
+  }
 
 .app_headerImage{
   object-fit: contain;
