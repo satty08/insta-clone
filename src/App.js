@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
-
   const [posts, setPosts] = useState([]);
   const [open, setOpen] = useState(false);
   const [username, setUsername] = useState('');
@@ -193,13 +192,13 @@ function App() {
       <div className="app__postsLeft">
         {
           posts.map(({id, post}) => (
-            <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+            <Post key={id} postId={id} user={user} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
           ))
         }
       </div>
       <div className="app__postsRight">
           <InstagramEmbed
-          url='https://www.instagram.com/p/CERhGcBnPjF/?utm_source=ig_web_copy_link'
+          url='https://www.instagram.com/p/CC6GpbXANpM/?utm_source=ig_web_copy_link'
           maxWidth={320}
           hideCaption={false}
           containerTagName='div'
