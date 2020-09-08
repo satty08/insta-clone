@@ -47,3 +47,20 @@
   display: flex;
   flex-direction: column;
 }
+
+.imgLogin {
+  margin: 50px;
+}
+
+.beforeLogin {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .imgLogin {
+    max-width: 400px;
+    max-height: 400px;
+  }
+}

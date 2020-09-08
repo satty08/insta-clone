@@ -189,6 +189,7 @@ function App() {
           )}
     </div>
 
+    { user ? (
     <div className="app__posts">
       <div className="app__postsLeft">
         {
@@ -212,12 +213,16 @@ function App() {
         />
       </div>
       
-    </div>
+    </div>): (
+      <div className="beforeLogin">
+        <img className="imgLogin" src="https://www.instagramcloneapps.com/products/images/headimg2.png" alt="" />
+      </div>
+    )}
     
     {user?.displayName ? (
             <ImageUpload username={user.displayName} />
           ): (
-            <h3>Login to Upload</h3>
+            null
           )}
       
     </div>
