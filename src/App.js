@@ -215,7 +215,7 @@ function App() {
       
     </div>): (
       <div className="beforeLogin">
-        <img className="imgLogin" src="https://www.instagramcloneapps.com/products/images/headimg2.png" alt="" />
+        <img className="imgLogin" src="https://miro.medium.com/max/875/1*B5_hBQ6ZgoL4R35_rUt1CA.png" alt="" />
       </div>
     )}
     
